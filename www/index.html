@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- un-comment this code to enable service worker
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('service worker installed'))
+          .catch(err => console.log('Error', err));
+      }
+    </script>-->
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+      <script src="lib/moment/moment.js"></script>
+      <script src="lib/angular-moment/angular-moment.js"></script>
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+     
+  </head>
+  <body ng-app="starter" ng-controller="redditCtrl">
+<ion-side-menus>
+    <ion-side-menu-content>
+        
+        <ion-nav-bar class="bar-stable">
+            <!--<ion-nav-buttons side="left" >
+                <button menu-toggle="left" class="button button-icon button-clear ion-navicon ">
+                     
+                </button>
+                
+               
+               
+            </ion-nav-buttons>-->
+            <ion-nav-buttons side="left">
+                <!-- Toggle left side menu -->
+                <button menu-toggle="left" class="buttons-right button-icon icon ion-navicon"></button>
+                
+                <div class="title title-center header-item">{{title}}</div>
+            </ion-nav-buttons>
+           
+           <div class="tabs tabs-icon-top">
+  <a class="tab-item" ng-click="category(hotURL)">
+    <i class="icon ion-contrast"></i>
+    HOT
+  </a>
+  <a class="tab-item" ng-click="category(topURL)">
+    <i class="icon ion-star"></i>
+    TOP
+  </a>
+  <a class="tab-item" ng-click="category(newURL)">
+    <i class="icon ion-ios-flame-outline"></i>
+    NEW
+  </a>
+ <a class="tab-item" ng-click="category(risingURL)">
+<i class="icon ion-ios-speedometer-outline"></i>
+ RISING
+</a>
+</div>
+        </ion-nav-bar>
+
+        <ion-header-bar class="bar-balanced ">
+            
+        </ion-header-bar>
+        <ion-pane>
+           
+            <ion-content>
+                <ion-refresher pulling-text="Pull to refresh..."
+                               on-refresh="doRefresh()">
+                </ion-refresher>
+                <div ng-repeat="data in NEWSContent track by data.id" class="list" style="margin-bottom: 2px;">
+                    <a class="item item-thumbnail-left item-text-wrap" ng-click="openPage(data.url)">
+
+                        <img src="{{data.thumbnail}}" ng-if="data.thumbnail.startsWith('http')" />
+                        <p>  <h2 class="positive story-title">{{data.title}}</h2>-({{data.domain}})</p>
+
+                        <p>
+                            Submitted <span am-time-ago="data.created_utc| amFromUnix"
+                                            am-preprocess="unix"></span>  by: {{data.author}}
+                        </p>
+
+                        <p>{{data.num_comments}} Comments;  Score: {{data.score}}</p>
+
+                    </a>
+
+                </div>
+                <ion-infinite-scroll on-infinite="loadMore()"
+                                     distance="1%">
+                </ion-infinite-scroll>
+            </ion-content>
+        </ion-pane>
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+        <ion-content>
+            <div class="list">
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/all/.json')">
+                    <i class="icon ion-clipboard"></i>ALL</a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/funny/.json')">
+                    <i class="icon ion-social-foursquare-outline"></i>FUNNY</a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/pics/.json')">
+                    <i class="icon ion-images"></i>PICS</a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/angularjs/.json')">
+                    <i class="icon ion-social-angular-outline"></i>Angularjs</a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/node/.json')">
+                    <i class="icon ion-social-nodejs"></i>NodeJS </a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/blog/.json')">
+                    <i class="icon ion-ios-compose"></i>BLOG</a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/books/.json')">
+                    <i class="icon ion-ios-book-outline"></i>BOOKS</a>
+                <a class="item item-icon-left menu-close" ng-click="Load_SubReddits('https://www.reddit.com/r/food/.json')">
+                    <i class="icon ion-fork"></i>FOOD</a>
+            </div>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>
+   
+  </body>
+</html>
